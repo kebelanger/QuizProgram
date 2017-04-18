@@ -5,10 +5,12 @@
  */
 package quizprogram;
 
+import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import quizprogram.DataHandler;
 import quizprogram.Subject;
@@ -35,6 +37,17 @@ public class MainWindow extends BaseWindow {
         subjectBuilderWindow.setVisible(false);
 
         myTableModel = (DefaultTableModel) subjectsTable.getModel();
+        
+        if (dataHandler.getSubjectWithName("Music") == null) {
+            Music defaultMusic = new Music();
+            dataHandler.addSubject(defaultMusic);
+        }
+      
+        if (dataHandler.getSubjectWithName("Geography") == null) {
+            Geography defaultGeography = new Geography();
+            dataHandler.addSubject(defaultGeography);
+        }
+
         refreshTable();
         setVisible(false);
         
@@ -212,11 +225,21 @@ public class MainWindow extends BaseWindow {
             java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {     
                 new MainWindow().setVisible(true);
+            }
+        });
+        
+        // http://stackoverflow.com/questions/9317461/get-the-application-closing-event
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            @Override
+            public void run()
+            {
+                dataHandler.save("data.txt");
             }
         });
     }

@@ -121,7 +121,7 @@ public class QuizBuilder extends BaseWindow {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addQuestionButtonActionPerformed
-        quiz.addQuestion(new Question(questionNumber, questionTextField.getText(), answerTextField.getText()));
+        quiz.addQuestion(new Question(questionNumber, questionTextField.getText(), answerTextField.getText(), QuestionType.BASIC));
         questionNumber++;
         questionTextField.setText("");
         answerTextField.setText("");
@@ -129,7 +129,7 @@ public class QuizBuilder extends BaseWindow {
 
     private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed
         quiz.setName(selectedName);
-        quiz.addQuestion(new Question(questionNumber, questionTextField.getText(), answerTextField.getText()));
+        quiz.addQuestion(new Question(questionNumber, questionTextField.getText(), answerTextField.getText(), QuestionType.BASIC));
         questionNumber++;
         questionTextField.setText("");
         answerTextField.setText("");

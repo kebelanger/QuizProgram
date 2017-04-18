@@ -25,8 +25,8 @@ public class BaseWindow extends JFrame {
     private static int X = 600;
     private static int Y = 400;
 
-    private static int WIDTH = 500;
-    private static int HEIGHT = 375;
+    protected static int WIDTH = 550;
+    protected static int HEIGHT = 375;
     
     public BaseWindow() {
         BaseWindow thisWindow = this;

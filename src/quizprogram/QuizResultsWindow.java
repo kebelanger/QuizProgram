@@ -53,12 +53,23 @@ public class QuizResultsWindow extends BaseWindow {
                 Answer actualAnswer = quiz.getAnswer(questionNumber);
                 Boolean isCorrect = quizGrader.grade(actualAnswer.getAnswer(), question.getAnswer());
                 actualAnswer.setIsCorrect(isCorrect);
-                myTableModel.addRow(new Object[]{ question.getQuestionNumber(), question.getQuestion(), isCorrect });
+                myTableModel.addRow(new Object[]{ question.getQuestionNumber(), getQuestionDetails(question), isCorrect });
             }
             dataHandler.getSubjectWithName(subjectName).addQuiz(quiz);
         }
     }
 
+    private String getQuestionDetails(Question question) {
+        switch(question.getQuestionType()) {
+            case BASIC:
+                return question.getQuestion();
+            case MUSIC:
+                return question.getAnswer();
+            default:
+                return "";
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

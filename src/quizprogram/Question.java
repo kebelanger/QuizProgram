@@ -13,11 +13,13 @@ public class Question {
     private Integer questionNumber;
     private String question;
     private String answer;
+    private QuestionType type;
     
-    public Question(int questionNumber, String question, String answer) {
+    public Question(int questionNumber, String question, String answer, QuestionType type) {
         this.questionNumber = questionNumber;
         this.question = question;
         this.answer = answer;
+        this.type = type;
     }
     
     public String getQuestion() {
@@ -32,6 +34,9 @@ public class Question {
         return questionNumber;
     }
 
-}
+    public QuestionType getQuestionType() {
+        return type;
+    }
 
+}
 
