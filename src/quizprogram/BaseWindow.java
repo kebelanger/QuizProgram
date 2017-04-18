@@ -56,6 +56,8 @@ public class BaseWindow extends JFrame {
                 Dimension dimension = thisWindow.getContentPane().getSize();
                 HEIGHT = dimension.height;
                 WIDTH = dimension.width;
+                
+                customOnResize();
             }
         });
 
@@ -69,6 +71,10 @@ public class BaseWindow extends JFrame {
 
     }
     
+    public void customOnResize() {
+        
+    }
+    
     // Override the setvisible method so whenever it is called, the window is moved to the right location
     // and set to be the right size
     @Override
@@ -78,7 +84,7 @@ public class BaseWindow extends JFrame {
     }
 
     // sets the size and location of the window to be HEIGHT, WIDTH, X, and Y
-    private void moveAndResize() {
+    protected void moveAndResize() {
         
         // reference for setting size + pack
         //http://stackoverflow.com/questions/2451252/swing-set-jframe-content-area-size

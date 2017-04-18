@@ -32,6 +32,12 @@ public class QuizWindow extends BaseWindow {
     private Decoder musicPlayer;
     private Thread musicThread;
     
+    private boolean revertSizeWhenDone = false;
+    private int incomingWidth;
+    private int incomingHeight;
+    
+    private ImageIcon mapImage;
+    
     /**
      * Creates new form QuizWindow
      */
@@ -85,11 +91,13 @@ public class QuizWindow extends BaseWindow {
                 break;
             case GEOGRAPHY:
                 // display map
+                questionLabel2.setText("Name the state:");
+
                 try {
                     String imageUrl = "https://maps.googleapis.com/maps/api/staticmap?"
                             + "center=39.8282,-98.5795"
                             + "&zoom=3"
-                            + "&size=" + QuizWindow.WIDTH + "x" + QuizWindow.HEIGHT
+                            + "&size=" + WIDTH + "x" + HEIGHT
                             + "&maptype=roadmap"
                             + "&markers=color:blue%7Clabel:S%7C" + currentQuestion.getQuestion()
                             + "&style=feature:all|element:labels|visibility:off"
@@ -113,15 +121,21 @@ public class QuizWindow extends BaseWindow {
                     System.exit(1);
                 }
 
-                ImageIcon mapImage = new ImageIcon((new ImageIcon("image.jpg")).getImage().getScaledInstance(
-                        QuizWindow.WIDTH, 
-                        QuizWindow.HEIGHT,
+                mapImage = new ImageIcon((new ImageIcon("image.jpg")).getImage().getScaledInstance(
+                        WIDTH, 
+                        HEIGHT,
                         Image.SCALE_SMOOTH
                 ));
 
                 mapLabel.setIcon(mapImage);
                 setMapLabelsVisibility(true);                
-
+                setQuestionLabelsVisibility(true);                
+                setAnswerLabelsVisibility(true);    
+                revertSizeWhenDone = true;
+                incomingHeight = HEIGHT;
+                incomingWidth = WIDTH;
+                HEIGHT += 250;
+                moveAndResize();
                 break;
         }
     }
@@ -140,6 +154,19 @@ public class QuizWindow extends BaseWindow {
         aLabel.setVisible(isVisible);
     }
 
+    @Override
+    public void customOnResize() {
+        if (null != mapImage) {
+            mapImage = new ImageIcon((new ImageIcon("image.jpg")).getImage().getScaledInstance(
+                WIDTH, 
+                HEIGHT - 250,
+                Image.SCALE_SMOOTH
+            ));
+
+            mapLabel.setIcon(mapImage);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -150,12 +177,13 @@ public class QuizWindow extends BaseWindow {
     private void initComponents() {
 
         questionLabel = new javax.swing.JLabel();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
         nextButton = new javax.swing.JButton();
         answerTextField = new javax.swing.JTextField();
         aLabel = new javax.swing.JLabel();
         qLabel = new javax.swing.JLabel();
-        questionLabel2 = new javax.swing.JLabel();
         mapLabel = new javax.swing.JLabel();
+        questionLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -170,11 +198,57 @@ public class QuizWindow extends BaseWindow {
 
         qLabel.setText("Q: ");
 
-        questionLabel2.setText("jLabel1");
-
         mapLabel.setText("mapLabel");
         mapLabel.setToolTipText("");
+        mapLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         mapLabel.setDoubleBuffered(true);
+
+        questionLabel2.setText("jLabel1");
+
+        jLayeredPane1.setLayer(nextButton, javax.swing.JLayeredPane.PALETTE_LAYER);
+        jLayeredPane1.setLayer(answerTextField, javax.swing.JLayeredPane.PALETTE_LAYER);
+        jLayeredPane1.setLayer(aLabel, javax.swing.JLayeredPane.PALETTE_LAYER);
+        jLayeredPane1.setLayer(qLabel, javax.swing.JLayeredPane.PALETTE_LAYER);
+        jLayeredPane1.setLayer(mapLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(questionLabel2, javax.swing.JLayeredPane.PALETTE_LAYER);
+
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addGap(68, 68, 68)
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                        .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(aLabel)
+                            .addComponent(qLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(questionLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                        .addGap(162, 162, 162)
+                        .addComponent(nextButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(mapLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(mapLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(questionLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(qLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(aLabel))
+                .addGap(58, 58, 58)
+                .addComponent(nextButton)
+                .addGap(57, 57, 57))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -185,39 +259,14 @@ public class QuizWindow extends BaseWindow {
                 .addComponent(questionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(867, 867, 867))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(aLabel)
-                                    .addComponent(qLabel))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(questionLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(162, 162, 162)
-                                .addComponent(nextButton))))
-                    .addComponent(mapLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLayeredPane1)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(mapLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(questionLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(qLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(aLabel))
-                .addGap(58, 58, 58)
-                .addComponent(nextButton)
-                .addGap(81, 81, 81)
+                .addComponent(jLayeredPane1)
+                .addGap(12, 12, 12)
                 .addComponent(questionLabel))
         );
 
@@ -257,11 +306,17 @@ public class QuizWindow extends BaseWindow {
         if (null != musicThread) {
             musicThread.interrupt();
         }
+        
+        if (revertSizeWhenDone) {
+            WIDTH = incomingWidth;
+            HEIGHT = incomingHeight;
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel aLabel;
     private javax.swing.JTextField answerTextField;
+    private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLabel mapLabel;
     private javax.swing.JButton nextButton;
     private javax.swing.JLabel qLabel;
