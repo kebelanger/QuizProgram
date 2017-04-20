@@ -8,10 +8,6 @@
  */
 package quizprogram;
 
-/**
- *
- * @author dianebelanger
- */
 public class GradedAnswerWindow extends BaseWindow {
 
     private QuizResultsWindow quizResultsWindow;

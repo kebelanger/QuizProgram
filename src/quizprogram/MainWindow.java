@@ -7,21 +7,13 @@
  */
 package quizprogram;
 
-import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import quizprogram.DataHandler;
-import quizprogram.Subject;
 
 /**
  *
- * @author dianebelanger
+ * @author Kristen Belanger
  */
 public class MainWindow extends BaseWindow {
     private DefaultTableModel myTableModel;

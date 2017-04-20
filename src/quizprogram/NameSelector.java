@@ -8,12 +8,6 @@
  */
 package quizprogram;
 
-import javax.swing.JFrame;
-
-/**
- *
- * @author dianebelanger
- */
 public class NameSelector extends BaseWindow {
 
     private QuizBuilder nextWindow;

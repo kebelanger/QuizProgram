@@ -11,15 +11,8 @@ package quizprogram;
 import java.awt.Color;
 import java.awt.Font;
 import java.text.DecimalFormat;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import quizprogram.Quiz;
-import quizprogram.Subject;
 
-/**
- *
- * @author dianebelanger
- */
 public class SubjectWindow extends BaseWindow {
 
     private DefaultTableModel myTableModel;

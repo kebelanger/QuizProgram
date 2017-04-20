@@ -7,13 +7,6 @@
  */
 package quizprogram;
 
-import quizprogram.DataHandler;
-import quizprogram.Subject;
-
-/**
- *
- * @author dianebelanger
- */
 public class SubjectBuilder extends BaseWindow {
 
     private MainWindow mainWindow;

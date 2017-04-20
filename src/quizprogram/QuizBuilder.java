@@ -8,27 +8,6 @@
  */
 package quizprogram;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.TargetDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import org.mp3transform.Decoder;
-import quizprogram.DataHandler;
-import quizprogram.Question;
-import quizprogram.Quiz;
-
-/**
- *
- * @author dianebelanger
- */
 public class QuizBuilder extends BaseWindow {
 
     private SubjectWindow subjectWindow;

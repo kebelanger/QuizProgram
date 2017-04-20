@@ -12,15 +12,10 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
-/**
- *
- * @author kristenbelanger
- */
 public class BaseWindow extends JFrame {
     
     protected static DataHandler dataHandler;
