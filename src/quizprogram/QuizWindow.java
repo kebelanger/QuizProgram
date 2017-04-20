@@ -2,6 +2,9 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ *
+ *
+ * Author: Kristen Belanger
  */
 package quizprogram;
 
@@ -120,7 +123,7 @@ public class QuizWindow extends BaseWindow {
                 break;
             case GEOGRAPHY:
                 // display map
-                questionLabel2.setText("Name the state:");
+                questionLabel2.setText("What state is this?");
 
                 String destinationFile = "image.jpg";
                 // https://developers.google.com/maps/documentation/static-maps
@@ -250,6 +253,9 @@ public class QuizWindow extends BaseWindow {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        nextButton.setBackground(new java.awt.Color(51, 51, 255));
+        nextButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        nextButton.setForeground(new java.awt.Color(255, 255, 51));
         nextButton.setText("Next");
         nextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -257,17 +263,23 @@ public class QuizWindow extends BaseWindow {
             }
         });
 
-        aLabel.setText("A: ");
+        aLabel.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
+        aLabel.setText("Answer:");
 
-        qLabel.setText("Q: ");
+        qLabel.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
+        qLabel.setText("Question:");
 
         mapLabel.setText("mapLabel");
         mapLabel.setToolTipText("");
         mapLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         mapLabel.setDoubleBuffered(true);
 
+        questionLabel2.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
         questionLabel2.setText("jLabel1");
 
+        playButton.setBackground(new java.awt.Color(51, 51, 255));
+        playButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        playButton.setForeground(new java.awt.Color(255, 255, 51));
         playButton.setText("Play");
         playButton.setToolTipText("");
         playButton.addActionListener(new java.awt.event.ActionListener() {

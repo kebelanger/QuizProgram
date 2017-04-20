@@ -74,7 +74,7 @@
                   <Component id="correctAnswerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="correctAnswerStrLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="113" max="32767" attributes="0"/>
+              <EmptySpace pref="104" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="doneButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="nextQuestionButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -93,16 +93,25 @@
     </Component>
     <Component class="javax.swing.JLabel" name="questionLabel">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Century Gothic" size="14" style="0"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Question:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="yourAnswerLabel">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Century Gothic" size="14" style="0"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Your Answer:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="correctAnswerLabel">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Century Gothic" size="14" style="0"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Correct Answer:"/>
       </Properties>
     </Component>
@@ -123,6 +132,15 @@
     </Component>
     <Component class="javax.swing.JButton" name="doneButton">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="33" red="33" type="rgb"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Century Gothic" size="14" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="ff" red="ff" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Done"/>
       </Properties>
       <Events>
@@ -131,6 +149,15 @@
     </Component>
     <Component class="javax.swing.JButton" name="nextQuestionButton">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="33" red="33" type="rgb"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Century Gothic" size="14" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="ff" red="ff" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Next Question"/>
       </Properties>
       <Events>
@@ -139,6 +166,15 @@
     </Component>
     <Component class="javax.swing.JButton" name="previousQuestionButton">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="33" red="33" type="rgb"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Century Gothic" size="14" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="99" green="ff" red="ff" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Previous Question"/>
       </Properties>
       <Events>

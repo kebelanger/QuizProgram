@@ -2,10 +2,14 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ *
+ * Author: Kristen Belanger
  */
 package quizprogram;
 
 import chrriis.dj.nativeswing.swtimpl.NativeInterface;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JTable;
@@ -30,6 +34,18 @@ public class MainWindow extends BaseWindow {
     public MainWindow() {
         super();
         initComponents();
+        
+       // http://stackoverflow.com/questions/11606852/change-background-color-of-jtable
+        jScrollPane1.getViewport().setBackground(Color.white);
+       // http://stackoverflow.com/questions/4408644/how-can-i-change-the-font-of-a-jtables-header
+        subjectsTable.getTableHeader().setFont(new Font("Century Gothic", Font.BOLD, 14));
+        //http://stackoverflow.com/questions/7778958/how-can-i-change-jtables-header-background-color
+//        subjectsTable.getTableHeader().setOpaque(false);
+//        subjectsTable.getTableHeader().setBackground(Color.BLUE);
+//        subjectsTable.getTableHeader().setForeground(new Color(255,255,51));
+        
+        
+        
         // data handler is responsible for loading the saved data and carrying it around
         dataHandler = new DataHandler();
         dataHandler.load("data.txt");
@@ -95,9 +111,14 @@ public class MainWindow extends BaseWindow {
         subjectsTable = new javax.swing.JTable();
         addSubjectButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 153));
 
+        goButton.setBackground(new java.awt.Color(51, 51, 255));
+        goButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        goButton.setForeground(new java.awt.Color(255, 255, 51));
         goButton.setText("Go");
         goButton.setToolTipText("");
         goButton.addActionListener(new java.awt.event.ActionListener() {
@@ -106,6 +127,7 @@ public class MainWindow extends BaseWindow {
             }
         });
 
+        subjectsTable.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         subjectsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
@@ -138,6 +160,9 @@ public class MainWindow extends BaseWindow {
             subjectsTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
+        addSubjectButton.setBackground(new java.awt.Color(51, 51, 255));
+        addSubjectButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        addSubjectButton.setForeground(new java.awt.Color(255, 255, 51));
         addSubjectButton.setText("Add Subject");
         addSubjectButton.setToolTipText("");
         addSubjectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -146,6 +171,9 @@ public class MainWindow extends BaseWindow {
             }
         });
 
+        deleteButton.setBackground(new java.awt.Color(51, 51, 255));
+        deleteButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        deleteButton.setForeground(new java.awt.Color(255, 255, 51));
         deleteButton.setText("Delete Subject");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,26 +181,35 @@ public class MainWindow extends BaseWindow {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel1.setText("Quiz Pop");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 42, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(addSubjectButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(deleteButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(goButton)
-                .addGap(42, 42, 42))
+                .addGap(0, 39, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(addSubjectButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(goButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -267,6 +304,7 @@ public class MainWindow extends BaseWindow {
     private javax.swing.JButton addSubjectButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton goButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable subjectsTable;
     // End of variables declaration//GEN-END:variables

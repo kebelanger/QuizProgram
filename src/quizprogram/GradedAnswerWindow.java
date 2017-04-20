@@ -2,6 +2,9 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ *
+ * Author: Kristen Belanger
+ *
  */
 package quizprogram;
 
@@ -61,10 +64,13 @@ public class GradedAnswerWindow extends BaseWindow {
 
         questionNumberLabel.setText("jLabel1");
 
+        questionLabel.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         questionLabel.setText("Question:");
 
+        yourAnswerLabel.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         yourAnswerLabel.setText("Your Answer:");
 
+        correctAnswerLabel.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         correctAnswerLabel.setText("Correct Answer:");
 
         questionStrLabel.setText("jLabel4");
@@ -73,6 +79,9 @@ public class GradedAnswerWindow extends BaseWindow {
 
         correctAnswerStrLabel.setText("jLabel4");
 
+        doneButton.setBackground(new java.awt.Color(51, 51, 255));
+        doneButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        doneButton.setForeground(new java.awt.Color(255, 255, 51));
         doneButton.setText("Done");
         doneButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -80,6 +89,9 @@ public class GradedAnswerWindow extends BaseWindow {
             }
         });
 
+        nextQuestionButton.setBackground(new java.awt.Color(51, 51, 255));
+        nextQuestionButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        nextQuestionButton.setForeground(new java.awt.Color(255, 255, 51));
         nextQuestionButton.setText("Next Question");
         nextQuestionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -87,6 +99,9 @@ public class GradedAnswerWindow extends BaseWindow {
             }
         });
 
+        previousQuestionButton.setBackground(new java.awt.Color(51, 51, 255));
+        previousQuestionButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        previousQuestionButton.setForeground(new java.awt.Color(255, 255, 153));
         previousQuestionButton.setText("Previous Question");
         previousQuestionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,7 +154,7 @@ public class GradedAnswerWindow extends BaseWindow {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(correctAnswerLabel)
                     .addComponent(correctAnswerStrLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(doneButton)
                     .addComponent(nextQuestionButton)

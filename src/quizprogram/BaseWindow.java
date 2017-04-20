@@ -2,9 +2,12 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ * 
+ * Author: Kristen Belanger
  */
 package quizprogram;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
@@ -28,8 +31,13 @@ public class BaseWindow extends JFrame {
     protected static int WIDTH = 550;
     protected static int HEIGHT = 375;
     
+    
     public BaseWindow() {
         BaseWindow thisWindow = this;
+        
+        http://stackoverflow.com/questions/33170623/how-to-change-background-color-at-jframe
+        getContentPane().setBackground(new Color(255,255,153));
+      
         
         
         // Whenever the screen is moved, update the x and y locations so the next call to setVisible will 

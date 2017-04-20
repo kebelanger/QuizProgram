@@ -2,6 +2,9 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ *
+ * Author: Kristen Belanger
+ *
  */
 package quizprogram;
 
@@ -118,8 +121,12 @@ public class QuizBuilder extends BaseWindow {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        questionLabel.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         questionLabel.setText("Question:");
 
+        addQuestionButton.setBackground(new java.awt.Color(51, 51, 255));
+        addQuestionButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        addQuestionButton.setForeground(new java.awt.Color(255, 255, 51));
         addQuestionButton.setText("Add Question");
         addQuestionButton.setToolTipText("");
         addQuestionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -130,10 +137,14 @@ public class QuizBuilder extends BaseWindow {
 
         questionTextField.setToolTipText("");
 
+        answerLabel.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         answerLabel.setText("Answer:");
 
         answerTextField.setToolTipText("");
 
+        doneButton.setBackground(new java.awt.Color(51, 51, 255));
+        doneButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        doneButton.setForeground(new java.awt.Color(255, 255, 51));
         doneButton.setText("Done");
         doneButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -141,6 +152,9 @@ public class QuizBuilder extends BaseWindow {
             }
         });
 
+        recordButton.setBackground(new java.awt.Color(51, 51, 255));
+        recordButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        recordButton.setForeground(new java.awt.Color(255, 255, 51));
         recordButton.setText("Record");
         recordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -148,6 +162,9 @@ public class QuizBuilder extends BaseWindow {
             }
         });
 
+        pauseButton.setBackground(new java.awt.Color(51, 51, 255));
+        pauseButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        pauseButton.setForeground(new java.awt.Color(255, 255, 51));
         pauseButton.setText("Stop Recording");
         pauseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -155,6 +172,9 @@ public class QuizBuilder extends BaseWindow {
             }
         });
 
+        playButton.setBackground(new java.awt.Color(51, 51, 255));
+        playButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        playButton.setForeground(new java.awt.Color(255, 255, 51));
         playButton.setText("Play");
         playButton.setToolTipText("");
         playButton.addActionListener(new java.awt.event.ActionListener() {
@@ -187,7 +207,7 @@ public class QuizBuilder extends BaseWindow {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(questionLabel)
                             .addComponent(answerLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(questionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))

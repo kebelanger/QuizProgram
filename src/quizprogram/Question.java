@@ -7,7 +7,7 @@ package quizprogram;
 
 /**
  * 
- * @author dianebelanger
+ * @author Kristen Belanger
  */
 public class Question {
     private Integer questionNumber;

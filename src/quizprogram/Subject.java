@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 /**
  *
- * @author dianebelanger
+ * @author Kristen Belanger
  */
 public class Subject {
     private HashMap<String, Quiz> quizzes = new HashMap(); 

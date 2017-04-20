@@ -5,11 +5,13 @@
  */
 package quizprogram;
 
+import java.awt.Color;
+import java.awt.Font;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author dianebelanger
+ * @author Kristen Belanger
  */
 public class QuizResultsWindow extends BaseWindow {
 
@@ -31,11 +33,18 @@ public class QuizResultsWindow extends BaseWindow {
         this.subjectWindow = subjectWindow;
         this.subjectName = subjectName;
         this.quizName = quizName;
-
-        quizNameLabel.setText(quizName);
+        
+        quizNameLabel.setText("");
+        jLabel2.setText(quizName);
         backToSubjectButton.setText("Back to " + subjectName);
         quizGrader = new QuizGrader();
         myTableModel = (DefaultTableModel) questionsTable.getModel();
+        
+       // http://stackoverflow.com/questions/11606852/change-background-color-of-jtable
+        jScrollPane1.getViewport().setBackground(Color.white);
+       // http://stackoverflow.com/questions/4408644/how-can-i-change-the-font-of-a-jtables-header
+        questionsTable.getTableHeader().setFont(new Font("Century Gothic", Font.BOLD, 14));
+        
         refreshTable();
         setVisible(false);
     }
@@ -89,9 +98,12 @@ public class QuizResultsWindow extends BaseWindow {
         backToSubjectButton = new javax.swing.JButton();
         quizNameLabel = new javax.swing.JLabel();
         questionDetailsButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        questionsTable.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         questionsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -123,47 +135,68 @@ public class QuizResultsWindow extends BaseWindow {
             questionsTable.getColumnModel().getColumn(2).setResizable(false);
         }
 
+        backToSubjectButton.setBackground(new java.awt.Color(51, 51, 255));
+        backToSubjectButton.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        backToSubjectButton.setForeground(new java.awt.Color(255, 255, 51));
         backToSubjectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 backToSubjectButtonActionPerformed(evt);
             }
         });
 
+        questionDetailsButton.setBackground(new java.awt.Color(51, 51, 255));
+        questionDetailsButton.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        questionDetailsButton.setForeground(new java.awt.Color(255, 255, 51));
         questionDetailsButton.setText("View question details");
+        questionDetailsButton.setAutoscrolls(true);
         questionDetailsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 questionDetailsButtonActionPerformed(evt);
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel2.setText("jLabel2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
                         .addComponent(questionDetailsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(backToSubjectButton))
+                        .addComponent(backToSubjectButton)
+                        .addGap(96, 96, 96)
+                        .addComponent(quizNameLabel))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(quizNameLabel)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(227, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(quizNameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(backToSubjectButton))
-                    .addComponent(questionDetailsButton)))
+                .addGap(18, 18, 18)
+                .addComponent(quizNameLabel)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(backToSubjectButton)
+                    .addComponent(questionDetailsButton))
+                .addGap(35, 35, 35))
         );
 
         pack();
@@ -229,6 +262,8 @@ public class QuizResultsWindow extends BaseWindow {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backToSubjectButton;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton questionDetailsButton;
     private javax.swing.JTable questionsTable;
