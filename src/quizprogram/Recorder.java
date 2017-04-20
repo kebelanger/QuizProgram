@@ -9,6 +9,10 @@ package quizprogram;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
  
 // http://www.codejava.net/coding/capture-and-record-sound-into-wav-file-with-java-sound-api
 public class Recorder {
@@ -33,12 +37,28 @@ public class Recorder {
         return format;
     }
  
+    private Path getPathToFile(String outputFileName) {
+        // http://stackoverflow.com/questions/3153337/get-current-working-directory-in-java
+        return Paths.get(System.getProperty("user.dir") + "/recordings/" + outputFileName);
+    }
+    
     /**
      * Captures the sound and record into a WAV file
      */
     public void start(String outputFileName) {
         try {
-            wavFile = new File("/Users/dianebelanger/NetBeansProjects/QuizProgram/recordings/" + outputFileName);
+            // http://stackoverflow.com/questions/320542/how-to-get-the-path-of-a-running-jar-file
+            // http://stackoverflow.com/questions/17540942/how-to-get-the-path-of-running-java-program
+            Path path = getPathToFile(outputFileName);
+            wavFile = path.toFile();
+            
+            // http://stackoverflow.com/questions/2833853/create-whole-path-automatically-when-writing-to-a-new-file
+            if (path.toFile().exists()) {
+                Files.delete(path);
+            }
+            Files.createDirectories(Paths.get(wavFile.getParent()));
+            Files.createFile(path);
+            
             AudioFormat format = getAudioFormat();
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
  
@@ -77,7 +97,7 @@ public class Recorder {
     public void playWavFile(String file) {
         // http://stackoverflow.com/questions/2416935/how-to-play-wav-files-with-java
         try {
-            File yourFile = new File("/Users/dianebelanger/NetBeansProjects/QuizProgram/recordings/" + file);
+            File yourFile = getPathToFile(file).toFile();
             AudioInputStream stream;
             AudioFormat format;
             DataLine.Info info;

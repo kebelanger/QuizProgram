@@ -89,15 +89,20 @@ public class QuizWindow extends BaseWindow {
                         try {
                             // http://stackoverflow.com/questions/6045384/playing-mp3-and-wav-in-java
                             // https://code.google.com/archive/p/mp3transform/
-                            musicPlayer = new Decoder();                            
-                            File file = new File("/Users/dianebelanger/NetBeansProjects/QuizProgram/songs/" + currentQuestion.getQuestion());
-                            FileInputStream in = new FileInputStream(file);
-                            BufferedInputStream bin = new BufferedInputStream(in, 128 * 1024);
+                            musicPlayer = new Decoder();    
+                            
+                            // For when running from jar.  http://stackoverflow.com/questions/3718201/how-to-add-resources-to-classpath
+                            // Get file from resources folder
+                            String fileName = currentQuestion.getQuestion();
+                            ClassLoader classLoader = getClass().getClassLoader();
+                            InputStream is = classLoader.getResourceAsStream(fileName);
+                            
+                            BufferedInputStream bin = new BufferedInputStream(is, 128 * 1024);
                             System.out.println("Before Play");
 
-                            musicPlayer.play(file.getName(), bin);
+                            musicPlayer.play(fileName, bin);
                             System.out.println("Done Playing");
-                            in.close();
+                            is.close();
 
                             musicPlayer.stop();
                         } catch(IOException ioe) {
