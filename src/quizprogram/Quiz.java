@@ -23,9 +23,10 @@ public class Quiz {
     private float lastScore = 0;
     private float averageScore = 0;
     private int timesTaken = 0;
+    private QuestionType questionType;
     
-    public Quiz() {
-        
+    public Quiz(QuestionType questionType) {
+        this.questionType = questionType;
     }
 
     public Quiz(ArrayList<Question> questions) {
@@ -83,6 +84,10 @@ public class Quiz {
     public HashMap<Integer, Answer> getAnswers() {
         return answers;
     }
+    
+    public void clearAnswers() {
+        this.answers = new HashMap<>();
+    }
 
     public void addQuestion(Question question) {
         questions.add(question);
@@ -91,4 +96,13 @@ public class Quiz {
     public void keepAnswer(Integer questionNumber, Answer answer) {
         answers.put(questionNumber, answer);
     }
+    
+    public QuestionType getQuestionType() {
+        return questionType;
+    }
+    
+    public void setQuestionType(QuestionType questionType) {  
+        this.questionType = questionType;
+    }
+
 }

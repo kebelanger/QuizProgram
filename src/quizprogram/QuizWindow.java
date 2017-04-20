@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.swing.ImageIcon;
 import org.mp3transform.Decoder;
@@ -39,6 +42,10 @@ public class QuizWindow extends BaseWindow {
     
     private ImageIcon mapImage;
     private Recorder recorder;
+    
+    private int numQuestionsToAsk;
+    private HashSet<Integer> questionsAsked = new HashSet<>();
+    
     /**
      * Creates new form QuizWindow
      */
@@ -52,7 +59,18 @@ public class QuizWindow extends BaseWindow {
         this.subjectWindow = subjectWindow;
         this.subjectName = subjectName;
         this.quizName = quizName;
-        currentQuestion = dataHandler.getSubjectWithName(subjectName).getQuizWithName(quizName).getQuestion(0);
+        Quiz quiz = dataHandler.getSubjectWithName(subjectName).getQuizWithName(quizName);
+        
+        // for geography and music quizzes get a random question, otherwise just get the first
+        if (QuestionType.GEOGRAPHY.equals(quiz.getQuestionType()) || QuestionType.MUSIC.equals(quiz.getQuestionType())) {
+            currentQuestion = getRandomQuestion(quiz);
+            
+            // clear out any saved answers
+            quiz.clearAnswers();
+        } else {
+            currentQuestion = quiz.getQuestion(0); 
+        }
+
         this.recorder = new Recorder();
 
         setupWindow();
@@ -92,6 +110,9 @@ public class QuizWindow extends BaseWindow {
                     }
                 });  
                 musicThread.start();
+                
+                numQuestionsToAsk = 5;
+                
                 break;
             case SPELLING:
                 questionLabel2.setText("Spell the word!");
@@ -113,7 +134,7 @@ public class QuizWindow extends BaseWindow {
                             + "&scale=2"
                             + "&size=350x238"
                             + "&maptype=roadmap"
-                            + "&markers=size:small%7Ccolor:blue%7C" + currentQuestion.getQuestion()
+                            + "&markers=size:small%7Ccolor:red%7C" + currentQuestion.getQuestion()
                             + "&style=feature:all|element:labels|visibility:off"
                             + "&style=feature:all|element:all|weight:1"
                             + "&key=AIzaSyAJjW_ZL-ZEkHpsIrZlVJgGPeniH-i_N1c";
@@ -147,6 +168,8 @@ public class QuizWindow extends BaseWindow {
                 incomingWidth = WIDTH;
                 HEIGHT += 250;
                 moveAndResize();
+                
+                numQuestionsToAsk = 5;
                 break;
         }
         showCorrectElements();
@@ -333,7 +356,8 @@ public class QuizWindow extends BaseWindow {
         quiz.keepAnswer(currentQuestion.getQuestionNumber(), new Answer(answerTextField.getText()));
         answerTextField.setText("");
         // questions start with number 1 so using the current questions number will retrieve the next question from the list
-        currentQuestion = quiz.getQuestion(currentQuestion.getQuestionNumber());
+        questionsAsked.add(currentQuestion.getQuestionNumber());
+        currentQuestion = getNextQuestion(quiz);
 
         if (null == currentQuestion) {
             // Just finished the last question, go to the next window
@@ -345,9 +369,10 @@ public class QuizWindow extends BaseWindow {
             quizResultsWindow.setVisible(true);
         } else {
             if (null == quiz.getQuestion(currentQuestion.getQuestionNumber())) {
-                // if this is the last question, change the next button to say done.
+                // if this is the last question, change the next button to say Finish.
                 nextButton.setText("Finish");
             }
+
             cleanupWindow();
             setupWindow();
         }
@@ -357,6 +382,42 @@ public class QuizWindow extends BaseWindow {
         recorder.playWavFile(currentQuestion.getQuestion());
     }//GEN-LAST:event_playButtonActionPerformed
 
+
+    private Question getNextQuestion(Quiz quiz) {
+        Question nextQuestion = null;
+        switch (currentQuestion.getQuestionType()) {
+            case BASIC:
+            case SPELLING:
+                nextQuestion = quiz.getQuestion(currentQuestion.getQuestionNumber());
+                break;
+            case MUSIC:
+            case GEOGRAPHY:
+                if (questionsAsked.size() < numQuestionsToAsk) {
+                    nextQuestion = getRandomQuestion(quiz);
+                }
+                break;
+        }
+        
+        return nextQuestion;
+    }
+    
+    private Question getRandomQuestion(Quiz quiz) {
+        Question question = null;
+        // http://stackoverflow.com/questions/8236125/get-random-integer-in-range-x-y
+        Random random = new Random();
+        while (question == null) {
+            int questionIndex = random.nextInt(quiz.getQuestions().size());
+            Question temp = quiz.getQuestion(questionIndex);
+            int questionNumber = temp.getQuestionNumber();
+            
+            // https://www.tutorialspoint.com/java/util/hashset_contains.htm
+            if (!questionsAsked.contains(questionNumber)) {
+                question = temp;
+            }
+        }
+        return question;
+    }
+    
     private void cleanupWindow() {
         if (null != musicPlayer) {
             musicPlayer.stop();

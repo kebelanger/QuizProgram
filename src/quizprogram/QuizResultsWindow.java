@@ -51,9 +51,12 @@ public class QuizResultsWindow extends BaseWindow {
             for (Question question: quiz.getQuestions()) {
                 Integer questionNumber = question.getQuestionNumber();
                 Answer actualAnswer = quiz.getAnswer(questionNumber);
-                Boolean isCorrect = quizGrader.grade(actualAnswer.getAnswer(), question.getAnswer());
-                actualAnswer.setIsCorrect(isCorrect);
-                myTableModel.addRow(new Object[]{ question.getQuestionNumber(), getQuestionDetails(question), isCorrect });
+                // if the answer is null we didnt do this question
+                if (null != actualAnswer) {
+                    Boolean isCorrect = quizGrader.grade(actualAnswer.getAnswer(), question.getAnswer());
+                    actualAnswer.setIsCorrect(isCorrect);
+                    myTableModel.addRow(new Object[]{ question.getQuestionNumber(), getQuestionDetails(question), isCorrect });
+                }
             }
             dataHandler.getSubjectWithName(subjectName).addQuiz(quiz);
         }
@@ -178,6 +181,11 @@ public class QuizResultsWindow extends BaseWindow {
                 numCorrect++;
             }
             numQuestions++;
+        }
+        
+        // For geography and music quizzes we only ask 5 random questions
+        if (QuestionType.GEOGRAPHY.equals(quiz.getQuestionType()) || QuestionType.MUSIC.equals(quiz.getQuestionType())) {
+            numQuestions = 5;
         }
         
         // need to cast to float, was always equalling 0

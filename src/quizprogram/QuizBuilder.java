@@ -45,7 +45,7 @@ public class QuizBuilder extends BaseWindow {
         initComponents();
         this.subjectName = subjectName;
         this.type = type;
-        quiz = new Quiz();
+        quiz = new Quiz(this.type);
         setupElements();
         setVisible(false);
     }
