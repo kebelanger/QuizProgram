@@ -24,16 +24,18 @@ public class SubjectWindow extends BaseWindow {
     private QuizBuilder quizBuilderWindow;
     private QuizWindow quizWindow;
     private String subjectName;
-
+    private QuestionType type;
+    
     /**
      * Creates new form SubjectWindow
      */
-    public SubjectWindow(MainWindow mainWindow, String subjectName) {
+    public SubjectWindow(MainWindow mainWindow, String subjectName, QuestionType type) {
         super();
         initComponents();
         
         this.mainWindow = mainWindow;
-        quizBuilderWindow = new QuizBuilder(subjectName);
+        this.type = type;
+        quizBuilderWindow = new QuizBuilder(subjectName, this.type);
         quizBuilderWindow.setSubjectWindow(this);
         
         nameWindow = new NameSelector(quizBuilderWindow);

@@ -64,6 +64,8 @@ public class QuizResultsWindow extends BaseWindow {
             case BASIC:
                 return question.getQuestion();
             case MUSIC:
+            case SPELLING:
+            case GEOGRAPHY:
                 return question.getAnswer();
             default:
                 return "";

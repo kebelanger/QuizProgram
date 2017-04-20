@@ -12,6 +12,6 @@ package quizprogram;
 public class QuizGrader {
     
     public Boolean grade(String actualAnswer, String correctAnswer) {
-        return correctAnswer.equals(actualAnswer);
+        return correctAnswer.toLowerCase().equals(actualAnswer.toLowerCase());
     }
 }

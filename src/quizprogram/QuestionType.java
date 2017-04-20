@@ -5,12 +5,33 @@
  */
 package quizprogram;
 
+import java.util.HashMap;
+
 /**
  *
  * @author dianebelanger
  */
 public enum QuestionType {
-    BASIC,
-    MUSIC,
-    GEOGRAPHY;
+    BASIC("BASIC"),
+    MUSIC("MUSIC"),
+    GEOGRAPHY("GEOGRAPHY"),
+    SPELLING("SPELLING");
+    
+    private String name;
+    private static HashMap<String, QuestionType> stringToTypeMap = new HashMap<>();
+    
+    static {
+        
+        for (QuestionType type: QuestionType.values()) {
+            stringToTypeMap.put(type.name, type);
+        }
+    }
+    
+    QuestionType(String name) {
+        this.name = name;
+    }
+    
+    public static QuestionType fromString(String name) {
+        return stringToTypeMap.get(name);
+    }
 }

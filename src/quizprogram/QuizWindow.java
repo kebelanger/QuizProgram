@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 import javax.swing.ImageIcon;
 import org.mp3transform.Decoder;
 
@@ -37,7 +38,7 @@ public class QuizWindow extends BaseWindow {
     private int incomingHeight;
     
     private ImageIcon mapImage;
-    
+    private Recorder recorder;
     /**
      * Creates new form QuizWindow
      */
@@ -52,6 +53,8 @@ public class QuizWindow extends BaseWindow {
         this.subjectName = subjectName;
         this.quizName = quizName;
         currentQuestion = dataHandler.getSubjectWithName(subjectName).getQuizWithName(quizName).getQuestion(0);
+        this.recorder = new Recorder();
+
         setupWindow();
         setVisible(false);
     }
@@ -63,46 +66,57 @@ public class QuizWindow extends BaseWindow {
                 questionLabel2.setText("<html>" + questionStr + "</html>");
                 break;
             case MUSIC:
-                questionLabel2.setText("Name this song.");
+                questionLabel2.setText("Name the movie!");
                 // threading: http://stackoverflow.com/questions/23184559/mp3transform-playing-mp3s-on-a-separate-thread
                 musicThread = new Thread(new Runnable() {
-                public void run()
-                {
-                    try {
-                        // http://stackoverflow.com/questions/6045384/playing-mp3-and-wav-in-java
-                        // https://code.google.com/archive/p/mp3transform/
-                        musicPlayer = new Decoder();
-                        File file = new File("/Users/dianebelanger/NetBeansProjects/QuizProgram/songs/" + currentQuestion.getQuestion());
-                        FileInputStream in = new FileInputStream(file);
-                        BufferedInputStream bin = new BufferedInputStream(in, 128 * 1024);
-                        System.out.println("Before Play");
+                    public void run()
+                    {
+                        try {
+                            // http://stackoverflow.com/questions/6045384/playing-mp3-and-wav-in-java
+                            // https://code.google.com/archive/p/mp3transform/
+                            musicPlayer = new Decoder();                            
+                            File file = new File("/Users/dianebelanger/NetBeansProjects/QuizProgram/songs/" + currentQuestion.getQuestion());
+                            FileInputStream in = new FileInputStream(file);
+                            BufferedInputStream bin = new BufferedInputStream(in, 128 * 1024);
+                            System.out.println("Before Play");
 
-                        musicPlayer.play(file.getName(), bin);
-                        System.out.println("Done Playing");
-                        in.close();
+                            musicPlayer.play(file.getName(), bin);
+                            System.out.println("Done Playing");
+                            in.close();
 
-                        musicPlayer.stop();
-                    } catch(IOException ioe) {
-                        ioe.printStackTrace();
-                        System.out.println("Failed to play the file.");
+                            musicPlayer.stop();
+                        } catch(IOException ioe) {
+                            ioe.printStackTrace();
+                            System.out.println("Failed to play the file.");
+                        }
                     }
-                }});  
+                });  
                 musicThread.start();
+                break;
+            case SPELLING:
+                questionLabel2.setText("Spell the word!");
+                
                 break;
             case GEOGRAPHY:
                 // display map
                 questionLabel2.setText("Name the state:");
 
+                String destinationFile = "image.jpg";
+                // https://developers.google.com/maps/documentation/static-maps
                 try {
+                    double scale = 1.2;
+                    Double scaledWidth = WIDTH * scale;
+                    Double scaledHeight = HEIGHT * scale;
                     String imageUrl = "https://maps.googleapis.com/maps/api/staticmap?"
-                            + "center=39.8282,-98.5795"
+                            + "center=39.8282,-95.5795"
                             + "&zoom=3"
-                            + "&size=" + WIDTH + "x" + HEIGHT
+                            + "&scale=2"
+                            + "&size=350x238"
                             + "&maptype=roadmap"
-                            + "&markers=color:blue%7Clabel:S%7C" + currentQuestion.getQuestion()
+                            + "&markers=size:small%7Ccolor:blue%7C" + currentQuestion.getQuestion()
                             + "&style=feature:all|element:labels|visibility:off"
+                            + "&style=feature:all|element:all|weight:1"
                             + "&key=AIzaSyAJjW_ZL-ZEkHpsIrZlVJgGPeniH-i_N1c";
-                    String destinationFile = "image.jpg";
                     URL url = new URL(imageUrl);
                     InputStream is = url.openStream();
                     OutputStream os = new FileOutputStream(destinationFile);
@@ -121,16 +135,13 @@ public class QuizWindow extends BaseWindow {
                     System.exit(1);
                 }
 
-                mapImage = new ImageIcon((new ImageIcon("image.jpg")).getImage().getScaledInstance(
+                mapImage = new ImageIcon((new ImageIcon(destinationFile)).getImage().getScaledInstance(
                         WIDTH, 
                         HEIGHT,
                         Image.SCALE_SMOOTH
                 ));
 
                 mapLabel.setIcon(mapImage);
-                setMapLabelsVisibility(true);                
-                setQuestionLabelsVisibility(true);                
-                setAnswerLabelsVisibility(true);    
                 revertSizeWhenDone = true;
                 incomingHeight = HEIGHT;
                 incomingWidth = WIDTH;
@@ -138,22 +149,50 @@ public class QuizWindow extends BaseWindow {
                 moveAndResize();
                 break;
         }
+        showCorrectElements();
     }
     
-    private void setMapLabelsVisibility(boolean isVisible) {
-        mapLabel.setVisible(isVisible);
+    private void showCorrectElements() {
+        switch(currentQuestion.getQuestionType()) {
+            case BASIC:
+                nextButton.setVisible(true);
+                answerTextField.setVisible(true);
+                aLabel.setVisible(true);
+                qLabel.setVisible(true);
+                questionLabel2.setVisible(true);
+                mapLabel.setVisible(false);
+                playButton.setVisible(false);
+                break;
+            case GEOGRAPHY:
+                nextButton.setVisible(true);
+                answerTextField.setVisible(true);
+                aLabel.setVisible(true);
+                qLabel.setVisible(true);
+                questionLabel2.setVisible(true);
+                mapLabel.setVisible(true);
+                playButton.setVisible(false);
+                break;
+            case SPELLING:
+                nextButton.setVisible(true);
+                answerTextField.setVisible(true);
+                aLabel.setVisible(true);
+                qLabel.setVisible(true);
+                questionLabel2.setVisible(true);
+                mapLabel.setVisible(false);
+                playButton.setVisible(true);
+                break;
+            case MUSIC:
+                nextButton.setVisible(true);
+                answerTextField.setVisible(true);
+                aLabel.setVisible(true);
+                qLabel.setVisible(true);
+                questionLabel2.setVisible(true);
+                mapLabel.setVisible(false);
+                playButton.setVisible(false);
+                break;
+        }
     }
-
-    private void setQuestionLabelsVisibility(boolean isVisible) {
-        questionLabel2.setVisible(isVisible);
-        qLabel.setVisible(isVisible);
-    }
-
-    private void setAnswerLabelsVisibility(boolean isVisible) {
-        answerTextField.setVisible(isVisible);
-        aLabel.setVisible(isVisible);
-    }
-
+    
     @Override
     public void customOnResize() {
         if (null != mapImage) {
@@ -184,6 +223,7 @@ public class QuizWindow extends BaseWindow {
         qLabel = new javax.swing.JLabel();
         mapLabel = new javax.swing.JLabel();
         questionLabel2 = new javax.swing.JLabel();
+        playButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -205,30 +245,44 @@ public class QuizWindow extends BaseWindow {
 
         questionLabel2.setText("jLabel1");
 
+        playButton.setText("Play");
+        playButton.setToolTipText("");
+        playButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playButtonActionPerformed(evt);
+            }
+        });
+
         jLayeredPane1.setLayer(nextButton, javax.swing.JLayeredPane.PALETTE_LAYER);
         jLayeredPane1.setLayer(answerTextField, javax.swing.JLayeredPane.PALETTE_LAYER);
         jLayeredPane1.setLayer(aLabel, javax.swing.JLayeredPane.PALETTE_LAYER);
         jLayeredPane1.setLayer(qLabel, javax.swing.JLayeredPane.PALETTE_LAYER);
         jLayeredPane1.setLayer(mapLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(questionLabel2, javax.swing.JLayeredPane.PALETTE_LAYER);
+        jLayeredPane1.setLayer(playButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addGap(68, 68, 68)
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                        .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(aLabel)
-                            .addComponent(qLabel))
-                        .addGap(18, 18, 18)
+                        .addGap(68, 68, 68)
                         .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(questionLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(aLabel)
+                                    .addComponent(qLabel))
+                                .addGap(18, 18, 18)
+                                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(questionLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(playButton))))
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                        .addGap(162, 162, 162)
+                        .addGap(230, 230, 230)
                         .addComponent(nextButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(mapLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -236,7 +290,7 @@ public class QuizWindow extends BaseWindow {
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addComponent(mapLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addComponent(mapLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
                 .addGap(28, 28, 28)
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(questionLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -245,7 +299,9 @@ public class QuizWindow extends BaseWindow {
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(aLabel))
-                .addGap(58, 58, 58)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(playButton)
+                .addGap(20, 20, 20)
                 .addComponent(nextButton)
                 .addGap(57, 57, 57))
         );
@@ -258,9 +314,7 @@ public class QuizWindow extends BaseWindow {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(questionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(867, 867, 867))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLayeredPane1)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jLayeredPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,17 +339,23 @@ public class QuizWindow extends BaseWindow {
             // Just finished the last question, go to the next window
             quizResultsWindow = new QuizResultsWindow(subjectWindow, subjectName, quizName);
             cleanupWindow();
+            
             quizResultsWindow.refreshTable();
-            quizResultsWindow.setVisible(true);
             this.setVisible(false);
+            quizResultsWindow.setVisible(true);
         } else {
             if (null == quiz.getQuestion(currentQuestion.getQuestionNumber())) {
                 // if this is the last question, change the next button to say done.
                 nextButton.setText("Finish");
             }
-            questionLabel2.setText("<html>" + currentQuestion.getQuestion() + "</html>");
+            cleanupWindow();
+            setupWindow();
         }
     }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
+        recorder.playWavFile(currentQuestion.getQuestion());
+    }//GEN-LAST:event_playButtonActionPerformed
 
     private void cleanupWindow() {
         if (null != musicPlayer) {
@@ -304,7 +364,7 @@ public class QuizWindow extends BaseWindow {
     
         // http://stackoverflow.com/questions/671049/how-do-you-kill-a-thread-in-java
         if (null != musicThread) {
-            musicThread.interrupt();
+            musicThread.stop();
         }
         
         if (revertSizeWhenDone) {
@@ -319,6 +379,7 @@ public class QuizWindow extends BaseWindow {
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLabel mapLabel;
     private javax.swing.JButton nextButton;
+    private javax.swing.JButton playButton;
     private javax.swing.JLabel qLabel;
     private javax.swing.JLabel questionLabel;
     private javax.swing.JLabel questionLabel2;

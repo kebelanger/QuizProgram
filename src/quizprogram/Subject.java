@@ -16,9 +16,11 @@ import java.util.HashMap;
 public class Subject {
     private HashMap<String, Quiz> quizzes = new HashMap(); 
     private String subjectName;
-
-    public Subject(String subjectName) {
+    private QuestionType type;
+    
+    public Subject(String subjectName, QuestionType type) {
         this.subjectName = subjectName;
+        this.type = type;
     }
    
     
@@ -56,6 +58,13 @@ public class Subject {
             return 0.0f;
         }
         return totalAverages / numQuizzes;
+    }
+    
+    public QuestionType getType() {
+        return type;
+    }
+    public void setType(QuestionType type) {
+        this.type = type;
     }
 }
 

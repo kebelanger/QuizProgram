@@ -37,10 +37,26 @@ public class MainWindow extends BaseWindow {
         subjectBuilderWindow.setVisible(false);
 
         myTableModel = (DefaultTableModel) subjectsTable.getModel();
-        
-        if (dataHandler.getSubjectWithName("Music") == null) {
-            Music defaultMusic = new Music();
+            
+        Subject defaultMusic = new Music();
+        Subject existingMusic = dataHandler.getSubjectWithName("Music");
+        if (existingMusic == null) {
             dataHandler.addSubject(defaultMusic);
+        } else if (existingMusic != null ) {
+            
+            for( String name : existingMusic.getQuizzes().keySet()) {
+                Quiz existingQuiz = existingMusic.getQuizWithName(name);
+                Quiz defaultQuiz = defaultMusic.getQuizWithName(name);
+                
+                // check to make sure every question in the default quiz existing in 
+                // the existing quiz
+                for( Question defaultQuestion : defaultQuiz.getQuestions()) {
+                    Question existingQuestion = existingQuiz.getQuestion(defaultQuestion.getQuestionNumber() - 1);
+                    if (null == existingQuestion) {
+                        existingQuiz.addQuestion(defaultQuestion);
+                    }
+                }
+            }
         }
       
         if (dataHandler.getSubjectWithName("Geography") == null) {
@@ -176,7 +192,8 @@ public class MainWindow extends BaseWindow {
         int row = subjectsTable.getSelectedRow();
         if (row != -1) {
             String subjectName = subjectsTable.getModel().getValueAt(row, column).toString();
-            subjectWindow = new SubjectWindow(this, subjectName);
+            QuestionType selectedSubjectType = dataHandler.getSubjectWithName(subjectName).getType();
+            subjectWindow = new SubjectWindow(this, subjectName, selectedSubjectType);
             subjectWindow.setVisible(true);
             this.setVisible(false);
         }

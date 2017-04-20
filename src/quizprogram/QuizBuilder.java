@@ -5,6 +5,19 @@
  */
 package quizprogram;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.TargetDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import org.mp3transform.Decoder;
 import quizprogram.DataHandler;
 import quizprogram.Question;
 import quizprogram.Quiz;
@@ -20,20 +33,67 @@ public class QuizBuilder extends BaseWindow {
     private int questionNumber = 1;
     private String selectedName;
     private String subjectName;
+    private QuestionType type;
     
+    private Recorder recorder;
+    private Thread recordingThread;
     /**
      * Creates new form QuizBuilder
      */
-    public QuizBuilder(String subjectName) {
+    public QuizBuilder(String subjectName, QuestionType type) {
         super();
         initComponents();
         this.subjectName = subjectName;
+        this.type = type;
         quiz = new Quiz();
-        questionTextField.setText("");
-        answerTextField.setText("");
+        setupElements();
         setVisible(false);
     }
+    
+    private void setupElements() {
+        showCorrectElements();
+        resetBetweenQuestions();
+    }
+    
+    private void showCorrectElements() {
+        if (type.equals(QuestionType.SPELLING)) {
+            questionLabel.setVisible(false);
+            questionTextField.setVisible(false);
+            answerLabel.setVisible(true);
+            answerTextField.setVisible(true);
+            doneButton.setVisible(true);
+            recordButton.setVisible(true);
+            playButton.setVisible(true);
+            pauseButton.setVisible(true);
+        } else {
+            questionLabel.setVisible(true);
+            questionTextField.setVisible(true);
+            answerLabel.setVisible(true);
+            answerTextField.setVisible(true);
+            doneButton.setVisible(true);
+            recordButton.setVisible(false);
+            playButton.setVisible(false);
+            pauseButton.setVisible(false);
+        }
+    }
 
+    private void resetBetweenQuestions() {
+        if (type.equals(QuestionType.SPELLING)) {
+            recorder = new Recorder();
+            
+            // define the recording thread. This doesnt actually start recording until we do thread.start()
+            recordingThread = new Thread(new Runnable() {
+                public void run() {
+                    recorder.start(getWavFileName());
+                }
+            });
+
+        } else {
+            questionTextField.setText("");
+            answerTextField.setText("");
+        } 
+    }
+    
     public void setSelectedName(String name) {
         selectedName = name;
     }
@@ -52,6 +112,9 @@ public class QuizBuilder extends BaseWindow {
         answerLabel = new javax.swing.JLabel();
         answerTextField = new javax.swing.JTextField();
         doneButton = new javax.swing.JButton();
+        recordButton = new javax.swing.JButton();
+        pauseButton = new javax.swing.JButton();
+        playButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,26 +141,57 @@ public class QuizBuilder extends BaseWindow {
             }
         });
 
+        recordButton.setText("Record");
+        recordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recordButtonActionPerformed(evt);
+            }
+        });
+
+        pauseButton.setText("Stop Recording");
+        pauseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pauseButtonActionPerformed(evt);
+            }
+        });
+
+        playButton.setText("Play");
+        playButton.setToolTipText("");
+        playButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(questionLabel)
-                    .addComponent(answerLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(questionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(41, 41, 41))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(addQuestionButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(doneButton)
                 .addGap(22, 22, 22))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(recordButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pauseButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(playButton)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(questionLabel)
+                            .addComponent(answerLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(questionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +204,12 @@ public class QuizBuilder extends BaseWindow {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(answerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(answerLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(recordButton)
+                    .addComponent(pauseButton)
+                    .addComponent(playButton))
+                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addQuestionButton)
                     .addComponent(doneButton))
@@ -121,7 +220,11 @@ public class QuizBuilder extends BaseWindow {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addQuestionButtonActionPerformed
-        quiz.addQuestion(new Question(questionNumber, questionTextField.getText(), answerTextField.getText(), QuestionType.BASIC));
+        String questionText = questionTextField.getText();
+        if (QuestionType.SPELLING.equals(this.type)) {
+            questionText = getWavFileName();
+        }
+        quiz.addQuestion(new Question(questionNumber, questionText, answerTextField.getText(), this.type));
         questionNumber++;
         questionTextField.setText("");
         answerTextField.setText("");
@@ -129,7 +232,11 @@ public class QuizBuilder extends BaseWindow {
 
     private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed
         quiz.setName(selectedName);
-        quiz.addQuestion(new Question(questionNumber, questionTextField.getText(), answerTextField.getText(), QuestionType.BASIC));
+        String questionText = questionTextField.getText();
+        if (QuestionType.SPELLING.equals(this.type)) {
+            questionText = getWavFileName();
+        }
+        quiz.addQuestion(new Question(questionNumber, questionText, answerTextField.getText(), this.type));
         questionNumber++;
         questionTextField.setText("");
         answerTextField.setText("");
@@ -140,6 +247,25 @@ public class QuizBuilder extends BaseWindow {
         this.setVisible(false);
     }//GEN-LAST:event_doneButtonActionPerformed
 
+    private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseButtonActionPerformed
+        if (null != recorder) {
+            recorder.finish();
+        }
+    
+        // http://stackoverflow.com/questions/671049/how-do-you-kill-a-thread-in-java
+        if (null != recordingThread) {
+            recordingThread.stop();
+        }
+    }//GEN-LAST:event_pauseButtonActionPerformed
+
+    private void recordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordButtonActionPerformed
+        resetBetweenQuestions();
+        recordingThread.start();
+    }//GEN-LAST:event_recordButtonActionPerformed
+
+    private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
+        recorder.playWavFile(getWavFileName());
+    }//GEN-LAST:event_playButtonActionPerformed
 
     public void setSubjectWindow(SubjectWindow subjectWindow) {
         this.subjectWindow = subjectWindow;
@@ -149,12 +275,19 @@ public class QuizBuilder extends BaseWindow {
         this.dataHandler = dataHandler;
     }
     
+    private String getWavFileName() {
+        return selectedName + "_" + questionNumber + ".wav";
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addQuestionButton;
     private javax.swing.JLabel answerLabel;
     private javax.swing.JTextField answerTextField;
     private javax.swing.JButton doneButton;
+    private javax.swing.JButton pauseButton;
+    private javax.swing.JButton playButton;
     private javax.swing.JLabel questionLabel;
     private javax.swing.JTextField questionTextField;
+    private javax.swing.JButton recordButton;
     // End of variables declaration//GEN-END:variables
 }

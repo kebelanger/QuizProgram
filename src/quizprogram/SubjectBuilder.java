@@ -39,6 +39,8 @@ public class SubjectBuilder extends BaseWindow {
         subjectNameLabel = new javax.swing.JLabel();
         subjectNameTextField = new javax.swing.JTextField();
         createSubjectButton = new javax.swing.JButton();
+        typeComboBox = new javax.swing.JComboBox<>();
+        typeLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,20 +53,29 @@ public class SubjectBuilder extends BaseWindow {
             }
         });
 
+        typeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BASIC", "SPELLING" }));
+
+        typeLabel.setText("Subject Type");
+        typeLabel.setToolTipText("");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(subjectNameLabel)
-                .addGap(30, 30, 30)
-                .addComponent(subjectNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(createSubjectButton)
                 .addGap(52, 52, 52))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(subjectNameLabel)
+                    .addComponent(typeLabel))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(typeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(subjectNameTextField))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -73,7 +84,11 @@ public class SubjectBuilder extends BaseWindow {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subjectNameLabel)
                     .addComponent(subjectNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(typeLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(createSubjectButton)
                 .addGap(25, 25, 25))
         );
@@ -84,7 +99,10 @@ public class SubjectBuilder extends BaseWindow {
     private void createSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createSubjectButtonActionPerformed
         // TODO add your handling code here:
         if (null != subjectNameTextField.getText() && !subjectNameTextField.getText().isEmpty()) {
-            newSubject = new Subject(subjectNameTextField.getText());
+
+            String selectedTypeStr = (String) typeComboBox.getSelectedItem();
+            QuestionType selectedType = QuestionType.fromString(selectedTypeStr);
+            newSubject = new Subject(subjectNameTextField.getText(), selectedType);
             subjectNameTextField.setText("");
             dataHandler.addSubject(newSubject);
             mainWindow.refreshTable();
@@ -99,5 +117,7 @@ public class SubjectBuilder extends BaseWindow {
     private javax.swing.JButton createSubjectButton;
     private javax.swing.JLabel subjectNameLabel;
     private javax.swing.JTextField subjectNameTextField;
+    private javax.swing.JComboBox<String> typeComboBox;
+    private javax.swing.JLabel typeLabel;
     // End of variables declaration//GEN-END:variables
 }
