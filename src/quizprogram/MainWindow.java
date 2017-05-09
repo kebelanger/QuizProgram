@@ -244,7 +244,7 @@ public class MainWindow extends BaseWindow {
             refreshTable();
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
-
+   
     /**
      * @param args the command line arguments
      */
